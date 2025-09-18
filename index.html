@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Space Shooter — Pro (Amadou)</title>
+  <!-- Ajouts pour mobile -->
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="screen-orientation" content="landscape">
+
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="styles.css">
+
+  <!-- Meta -->
+  <meta name="description" content="Space Shooter Pro - Jeu créé par Amadou - prototype web arcade" />
+</head>
+<body>
+  <div class="app">
+
+    <!-- Top bar / HUD -->
+    <header class="topbar">
+      <div class="brand">
+        <div class="logo">🚀</div>
+        <div class="title">Space Shooter</div>
+      </div>
+
+      <div class="hud">
+        <div class="hud-item">Score <span id="domScore">0</span></div>
+        <div class="hud-item">Vies <span id="domLives">3</span></div>
+        <div class="hud-item">Niveau <span id="domLevel">1</span></div>
+        <div class="hud-item">Meilleur <span id="domBest">0</span></div>
+      </div>
+    </header>
+
+    <!-- Main game area -->
+    <main class="game-area">
+      <canvas id="gameCanvas" aria-label="Zone de jeu - Space Shooter"></canvas>
+
+      <!-- Touch controls (visible on mobile/touch) -->
+      <div class="touch-controls">
+        <div id="touchLeft" class="touch-zone"></div>
+        <div id="touchRight" class="touch-zone"></div>
+        <button id="touchShoot" class="touch-shoot">TIR</button>
+        <button id="touchBoost" class="touch-boost">BOOST</button>
+      </div>
+
+      <!-- Center overlay: start / tutorial / paused / ready -->
+      <div id="centerOverlay" class="overlay center">
+        <div class="card">
+          <h1>Space Shooter</h1>
+          <p class="lead">Jeu créé par <strong>Amadou</strong></p>
+          <div class="controls-list">
+            <p>Contrôles clavier : ← → ou A D = bouger · ↑ / W = accélérer · Espace = tirer</p>
+            <p>Touches mobiles : zones gauche/droite + bouton TIR + BOOST</p>
+          </div>
+
+          <div class="buttons">
+            <button id="btnStart" class="btn primary">Démarrer</button>
+            <button id="btnTutorial" class="btn">Tutoriel rapide</button>
+          </div>
+
+          <div class="small">Astéroïdes, power-ups & aliens. Détruis-les et tiens le plus longtemps possible.</div>
+        </div>
+      </div>
+
+      <!-- Tutorial overlay (interactive small demo) -->
+      <div id="tutorialOverlay" class="overlay hidden">
+        <div class="card">
+          <h2>Tutoriel</h2>
+          <ol>
+            <li>Déplace-toi avec les flèches ← → (ou A / D)</li>
+            <li>Appuie sur Espace pour tirer</li>
+            <li>Accélère avec ↑ / W pour esquiver plus vite</li>
+            <li>Ramasse les power-ups : bouclier & ralenti</li>
+            <li>Alien = apparition après 50 pts — détruis-les pour +points</li>
+          </ol>
+          <div class="buttons">
+            <button id="btnTutorialClose" class="btn primary">J'ai compris, jouer</button>
+            <button id="btnTutorialBack" class="btn">Retour</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Game Over overlay -->
+      <div id="gameOverOverlay" class="overlay hidden">
+        <div class="card">
+          <h2 id="goTitle">Game Over</h2>
+          <p class="lead">Ton score : <span id="finalScore">0</span></p>
+          <p>Meilleur : <span id="finalBest">0</span></p>
+          <div class="buttons">
+            <button id="btnReplay" class="btn primary">Rejouer</button>
+            <button id="btnMainMenu" class="btn">Menu</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Rules bar fixed bottom -->
+      <div class="rules bottom">
+        ← / →  / A D : bouger · ↑ / W : accélérer · Espace : tirer · Détruis astéroïdes et aliens (à partir de 50 pts) · Ramasse power-ups
+      </div>
+
+      <!-- 🎵 Audio romantique pour Djene -->
+      <audio id="loveMusic" src="sound/romantique.mp3" preload="auto"></audio>
+
+      <!-- 💖 Message secret pour Djene -->
+      <div id="secretMessage" style="
+          display:none;
+          font-size:20px;
+          line-height:1.8;
+          color:#ffccdd;
+          position:fixed;
+          top:50%;
+          left:50%;
+          transform:translate(-50%,-50%);
+          width:75%;
+          padding:25px;
+          background:rgba(0,0,0,0.75);
+          border-radius:15px;
+          box-shadow:0 0 20px #ff99cc;
+          z-index:1000;
+          max-height:80%;
+          overflow-y:auto;
+      ">
+        💖 Djene 💖  
+        <br><br>
+        Depuis la 6ème, le jour où nos regards se sont croisés pour la première fois, mon cœur t’avait déjà choisie.  
+        J’ai gardé ce sentiment secret pendant des années, jusqu’en 4ème-5ème, quand enfin nos cœurs se sont rejoints.  
+        <br><br>
+        Dans notre couple, il y a eu des moments magnifiques, des rires, des complicités, mais aussi des périodes difficiles.  
+        Pourtant, même dans ces épreuves, je n’ai jamais cessé de t’aimer.  
+        <br><br>
+        Devant Allah, j’ai fait le serment de t’épouser, et après ce serment, j’ai changé pour devenir la meilleure version de moi-même, car ton amour m’a transformé positivement.  
+        <br><br>
+        Mais avec le temps, nous avons commencé à avoir des disputes, des désaccords, jusqu’à ce que nous soyons obligés de nous séparer.  
+        Même si nous n’avions pas encore la mentalité pour tenir à ce moment-là, il y a une chose dont je suis certain : je finirai ma vie avec toi.  
+        <br><br>
+        Djene, tu es et resteras celle qui a changé ma vie, celle que j’ai aimée depuis le premier regard, et celle avec qui je veux partager mon futur.  
+        Peu importe les épreuves, peu importe la distance ou le temps : mon amour pour toi est éternel, pur et sincère.  
+        <br><br>
+        💖 Je t’aime, Djene, aujourd’hui, demain et pour toujours. 💖
+      </div>
+
+    </main>
+
+    <footer class="footer">
+      <div>Jeu créé par <strong>Amadou</strong></div>
+      <div class="small muted">Prototype - utilise des ressources libres (peux personnaliser textures / sons)</div>
+    </footer>
+
+  </div>
+
+  <!-- Game script -->
+  <script src="game.js"></script>
+
+  <!-- Script pour message romantique -->
+  <script>
+    const loveMusic = document.getElementById("loveMusic");
+    const secretMessage = document.getElementById("secretMessage");
+
+    // Vérifie toutes les 0,5s si le score atteint 200
+    const scoreObserver = setInterval(() => {
+        if (typeof score !== 'undefined' && score >= 200 && secretMessage.style.display === 'none') {
+            secretMessage.style.display = "block";
+            loveMusic.play();
+            clearInterval(scoreObserver); // déclenche une seule fois
+        }
+    }, 500);
+  </script>
+
+<body style="touch-action:none;">
+</html>
+
+

@@ -1,0 +1,81 @@
+/* styles.css — design moderne, HUD, overlays, responsive */
+:root{
+  --bg-1: #020217;
+  --bg-2: #07102a;
+  --neon: #00f0ff;
+  --accent: #ff4b4b;
+  --muted: #9fb0c8;
+  --glass: rgba(255,255,255,0.03);
+  --panel: rgba(255,255,255,0.02);
+  --shadow: 0 18px 60px rgba(2,8,20,0.7);
+  --radius: 12px;
+}
+
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;font-family:'Inter',system-ui,Arial,sans-serif;background:linear-gradient(180deg,var(--bg-1),var(--bg-2));color:var(--neon);-webkit-font-smoothing:antialiased}
+.app{max-width:1180px;margin:18px auto;display:flex;flex-direction:column;gap:12px;padding:10px}
+
+/* Topbar */
+.topbar{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border-radius:var(--radius);box-shadow:var(--shadow);border:1px solid rgba(255,255,255,0.02)}
+.brand{display:flex;align-items:center;gap:10px}
+.logo{font-size:26px}
+.title{font-weight:800;font-size:18px}
+.hud{display:flex;gap:10px;align-items:center}
+.hud-item{background:var(--panel);padding:8px 12px;border-radius:8px;border:1px solid rgba(255,255,255,0.02);color:var(--muted);font-weight:700}
+.hud-item span{color:var(--neon);margin-left:6px;font-weight:900}
+
+/* Game area */
+.game-area{position:relative;border-radius:12px;overflow:hidden;border:1px solid rgba(255,255,255,0.03);box-shadow:var(--shadow)}
+#gameCanvas{display:block;width:100%;height:70vh;background:
+  radial-gradient(ellipse at 20% 20%, rgba(255,255,255,0.015), transparent 10%),
+  radial-gradient(ellipse at 80% 80%, rgba(255,255,255,0.01), transparent 10%),
+  linear-gradient(180deg, rgba(2,6,20,0.6), rgba(0,0,0,0.95));cursor:none}
+
+/* Touch controls visible on small screens but present always (pointer-events handled) */
+.touch-controls{position:absolute;inset:0;display:flex;pointer-events:none}
+.touch-zone{flex:1;pointer-events:auto}
+.touch-shoot{position:absolute;right:14px;bottom:14px;padding:10px 14px;background:linear-gradient(180deg,var(--accent),#e52020);color:white;border:none;border-radius:10px;font-weight:800;box-shadow:0 8px 30px rgba(232,31,31,0.18)}
+.touch-boost{position:absolute;right:14px;bottom:64px;padding:8px 12px;background:linear-gradient(180deg,#2ec4b6,#1fa79d);color:#012; border:none;border-radius:8px;font-weight:700;box-shadow:0 6px 18px rgba(0,0,0,0.25)}
+
+/* Overlay cards */
+.overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:linear-gradient(180deg, rgba(1,2,6,0.6), rgba(0,0,0,0.75));z-index:30}
+.overlay.hidden{display:none}
+.card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:20px;border-radius:12px;border:1px solid rgba(255,255,255,0.03);min-width:320px;max-width:720px;text-align:center;box-shadow:0 18px 60px rgba(0,0,0,0.7)}
+.card h1{margin:0 0 8px 0;font-size:26px}
+.card .lead{color:var(--muted);margin-bottom:12px}
+.controls-list p{margin:6px 0;color:var(--muted)}
+.buttons{display:flex;gap:10px;justify-content:center;margin-top:14px}
+.btn{padding:10px 14px;border-radius:10px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:var(--neon);font-weight:700;cursor:pointer;transition:transform .12s}
+.btn.primary{background:linear-gradient(180deg,var(--accent),#e52020);color:white;border:none}
+.btn:hover{transform:translateY(-4px)}
+
+/* Rules bar bottom */
+.rules.bottom{position:absolute;left:50%;transform:translateX(-50%);bottom:10px;background:rgba(255,255,255,0.03);color:var(--muted);padding:8px 14px;border-radius:999px;font-size:13px;border:1px solid rgba(255,255,255,0.02);backdrop-filter: blur(4px)}
+
+/* Footer */
+.footer{display:flex;justify-content:space-between;align-items:center;padding:6px 10px;color:var(--muted);font-size:13px}
+
+/* small responsive */
+@media (max-width:720px){
+  #gameCanvas{height:62vh}
+  .card{min-width:260px;padding:14px}
+  .title{font-size:16px}
+  .hud-item{padding:6px 8px;font-size:13px}
+  .rules.bottom{font-size:12px;padding:6px 10px}
+}
+/* --- AJOUT MOBILE --- */
+html, body {
+  overscroll-behavior: none;  /* empêche le "tirer pour recharger" */
+  touch-action: none;          /* bloque le pinch-zoom */
+}
+canvas {
+  touch-action: none;
+}
+
+@media (max-width:720px){
+  #gameCanvas { height: 80vh; } /* canvas plus grand sur mobile */
+}
+
+
+
+
